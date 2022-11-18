@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRY42</title>
+  <style>
+    body {
+      background-color:#ddd;
+    }
+    #slider {
+      margin:50px auto;
+      width:580px;
+      background-color: #fff;
+      padding:0;
+    }
+  </style>
+  <!-- CSSファイル、Scriptファイルを読み込む -->
+  <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="slick/slick.min.js"></script>	
+</head>
+<body>
+  <ul id="slider">
+    <li>ここに画像を設置することができます</li>
+    <li>画像をスライドすることができます</li>
+    <li>可能です</li>
+  </ul>
+  <script>
+    $('#slider').slick({
+      dots:true
+    });
+      
+  </script>
+</body>
+</html>
