@@ -25,7 +25,8 @@
         }
 
   </style>
-
+  <!-- jQueryライブラリの読み込み -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div id="display_title">曲のタイトル</div>
@@ -49,10 +50,10 @@
     <script language="javascript" type="text/javascript">
         var music = new Audio(); //変数作成
         // 曲リスト配列
-        const array1 = ['like @ Angel/黒夢/like@angel.mp3','Secret Night/WANDS/Secret.mp3','なぜ/Hysteric Blue/naze.mp3','Out Of The Blue/乃木坂46/Out of the blue.mp3','Last Love Song/GARNET CROW/lastlovesong.mp3','クリスタルゲージ/GARNET CROW/クリスタルゲージ.mp3','能動的３分間/東京事変/能動的三分間.mp3','タマシイレボリューション/Superfly/タマシイレボリューション.mp3','二人セゾン/欅坂46/二人セゾン.mp3','Miss Moonlight/黒夢/Miss MOONLIGHT.mp3'];
+        const array1 = ['like @ Angel/黒夢/like@angel.mp3','Secret Night/WANDS/Secret.mp3','なぜ/Hysteric Blue/naze.mp3','Out Of The Blue/乃木坂46/Out of the blue.mp3','Last Love Song/GARNET CROW/lastlovesong.mp3','クリスタルゲージ/GARNET CROW/クリスタルゲージ.mp3','能動的３分間/東京事変/能動的三分間.mp3','タマシイレボリューション/Superfly/タマシイレボリューション.mp3','二人セゾン/欅坂46/二人セゾン.mp3','Miss Moonlight/黒夢/Miss MOONLIGHT.mp3','SURREAL/浜崎あゆみ/SURREAL.mp3'];
         // 配列の長さ
         const num = array1.length;
-        let secret_number = Math.floor(Math.random() * num);
+        let secret_number = 0;
         let array2 = array1[secret_number].split('/');
         let play_title = array2[0];
         let musician = array2[1];
@@ -65,10 +66,13 @@
         const select = document.getElementById('select');
         const display_title = document.getElementById('display_title');
         const display_musician = document.getElementById('display_musician');
-    
+        
+
 
         music.src = `./sound/${file}`; //音声ファイル指定
         music.volume = 0.5; //音量の初期値(50%)
+
+        
     
         // 再生
         function music_play() { 
@@ -76,32 +80,59 @@
             music.play();
             display_title.textContent = `曲名:${play_title}`;
             display_musician.textContent = `歌手名:${musician}`;
+            stop.disabled = false;
+            play.disabled = true;
+            first.disabled = false;
+            all_stop.disabled = false;
+            select.disabled = true;
         }
     
         // 一時停止 
         function music_stop() { 
             music.pause();
+            stop.disabled = true;
+            play.disabled = false;
+            first.disabled = false;
+            all_stop.disabled = false;
+            select.disabled = false;
         }
 
         // 最初へ戻る
         function first_time() {
             music.currentTime = 0;
+            stop.disabled = true;
+            play.disabled = false;
+            first.disabled = true;
+            all_stop.disabled = true;
+            select.disabled = true;
         }
 
         //停止
         function all_stop2() {
             music.pause();
             music.currentTime = 0;
+            stop.disabled = true;
+            play.disabled = false;
+            first.disabled = true;
+            all_stop.disabled = true;
+            select.disabled = false;
         }
 
         // 選曲
         function select_tune(){
+            all_stop2();
             secret_number = Math.floor(Math.random() * num);
             array2 = array1[secret_number].split('/');
             play_title = array2[0];
             musician = array2[1];
             file = array2[2];
-            music.src = `./sound/${file}`; //音声ファイル指定
+            //音声ファイル指定
+            music.src = `./sound/${file}`; 
+            stop.disabled = true;
+            play.disabled = false;
+            first.disabled = true;
+            all_stop.disabled = true;
+            select.disabled = false;
         }
     
         function volume_down() { //音量ダウン
@@ -138,6 +169,12 @@
             }
         }
     
+        stop.disabled = true;
+        play.disabled = true;
+        first.disabled = true;
+        all_stop.disabled = true;
+        select.disabled = false;
+
         // 一時停止ボタンをクリックしたときに発生するイベントリスナー
         stop.addEventListener('click',music_stop);
         // 再生ボタンをクリックしたときに発生するイベントリスナー
