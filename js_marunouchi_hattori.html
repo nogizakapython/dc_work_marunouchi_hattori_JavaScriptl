@@ -110,8 +110,7 @@
             var audioDestination = audioCtx.destination;
             //出力先のスピーカーに接続
             osc.connect(audioDestination);
-            //音を出す(クロスブラウザ対応)
-            osc.start = osc.start ;
+            
             timer = setInterval(osc.start(),10);
             
             display.textContent = music1;
