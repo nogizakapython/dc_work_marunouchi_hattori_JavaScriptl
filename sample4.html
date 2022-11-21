@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web簡易ピアノ</title>
+  <title>Web簡易ピアノ(自動演奏サンプル)</title>
   <style>
     
     .piano {
@@ -71,10 +71,10 @@
       <div id="G4" class="key">ソ</div>
       <div id="A4" class="key">ラ</div>
       <div id="B4" class="key">シ</div>
-    </div>  
-      <script>
-          // AudioContextオブジェクトの作成
-          window.AudioContext = window.AudioContext ; 
+    </div>
+    <script>
+          // AudioContextオブジェクトの作成(クロスブラウザ対応)
+          window.AudioContext = window.AudioContext; 
           // AudioContext オブジェクトを新しく作成
           var audioCtx = new AudioContext();
           // ド(C4)～シ(B4)までのIDからオブジェクトを取得する
@@ -111,7 +111,7 @@
             //出力先のスピーカーに接続
             osc.connect(audioDestination);
             //音を出す(クロスブラウザ対応)
-            osc.start = osc.start ;
+            osc.start = osc.start;
             timer = setInterval(osc.start(),10);
             
             display.textContent = music1;
@@ -123,11 +123,9 @@
                     osc.stop();
                     clearInterval(timer)
             },playing_seconds);
-            
-             
+                      
           }  
-
-             
+          
 
           // ピアノの音階をクリック
           C4.addEventListener('click',function() {
@@ -171,6 +169,11 @@
             const h = hz_array[6];
             play(d,h);
           },false);
+          
+          
+
+          
+          
           
           
 
