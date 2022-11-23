@@ -5,6 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web簡易ピアノ</title>
+  <!-- jQueryの読み込み -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!-- Tone.jsを下記のURLサイトから読み込む -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.1.25/Tone.js"></script>
   <!-- CSSファイルの定義 -->
@@ -78,6 +80,9 @@
       
       
     }
+    .disable-div {
+      pointer-events: none;
+    }
 
 
   </style>
@@ -128,6 +133,8 @@
       let playing_seconds = 1.5;
       // 音階を表示する時間
       let display_seconds = 1000;
+      // フラグ変数
+      let flag1 = "remove";
       
          
       function play(music){
@@ -158,10 +165,13 @@
           
       function playNote() {
           // create a synth
+          display.textContent = "自動演奏中";
           synth = new Tone.FMSynth().toMaster();  
           // const node_data = ["C4","B4"];
            
-          
+          $(document).ready(function() {
+            $(".keyboard").addClass("disable-div");
+          });
           // play a note from that synth
           const now = Tone.now();
           synth.triggerAttackRelease("F4", 0.5, now );
@@ -169,9 +179,15 @@
           synth.triggerAttackRelease("G4", 0.5, now + 1.5);
           synth.triggerAttackRelease("", 0.5, now + 2);
           synth.triggerAttackRelease("C4", 0.5, now + 2.5);
+          
       }
 
-      
+      function stopNote() {
+        options.context.close();
+        $(document).ready(function() {
+            $(".keyboard").removeClass("disable-div");
+        });
+      }
       
  
           
@@ -209,15 +225,23 @@
       
 
       autoplay.addEventListener('click',function(){
+        if (flag1 == "remove") {
+            $(document).ready(function() {
+              $(".keyboard").addClass("disable-div");
+            });
+            flag1 = "add";
+        } else if (flag1 == "add") {
+            $(document).ready(function() {
+              $(".keyboard").removeClass("disable-div");
+            });  
+            flag = "false";
+        }   
+        
           if (autoplay.textContent == "自動演奏"){
             autoplay.textContent = "演奏中止";
-            timer = setInterval(playNote(),100);
-          } else {
-            autoplay.textContent = "自動演奏";
-            clearInterval(timer);
-            Tone.Transport.stop();
           }
-          
+          timer = setInterval(playNote(),30);
+          clearInterval(timer);
       },false);
 
 
