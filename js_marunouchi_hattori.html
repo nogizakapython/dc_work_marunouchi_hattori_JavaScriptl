@@ -57,16 +57,13 @@
     }
 
     .autobutton {
-      width:300px;
-      height:50px;
-      background-color:#FFF;
       margin-top:20px;
-      margin:auto;
-     
+      display:flex;
+      justify-content: center;
     }
 
     .autobutton .button1  {
-      width:200px;
+      width:150px;
       height:35px;
       padding-top:8px;
       padding-left:8px;
@@ -77,6 +74,7 @@
       color:#80F;
       text-align: center;
       font-size:15px;
+      display:block;
       
       
     }
@@ -113,7 +111,7 @@
       
       
       // AudioContext オブジェクトを新しく作成
-      let synth;
+      var synth;
       // ド(C4)～シ(B4)までのIDから要素を取得する
       const C4 = document.getElementById('C4');
       const D4 = document.getElementById('D4');
@@ -135,9 +133,9 @@
       // 音階を表示する時間
       let display_seconds = 1000;
       // 演奏曲のメロディライン配列
-      let music_note;
+      var music_note;
       // プレイリストの変数設定
-      let playlist;
+      var playlist;
       // 初期ロード時、演奏中止ボタンを非表示にする
       autostop1.style.visibility = "hidden";
       
@@ -161,13 +159,9 @@
                      ];   
       function manual_play(){
 
-        //再生設定
-        
         // 演奏オブジェクトの取得
         synth = new Tone.FMSynth().toMaster();
         
-        // 乱数の定義
-        const random = Math.floor(Math.random() * 2);
         // 音階の定義
         let w_music_deg;
         let music_deg;
@@ -213,7 +207,64 @@
         }  
       }
           
+      function auto_play(){
+
+        // 演奏オブジェクトの取得
+        synth = new Tone.FMSynth().toMaster();
+
+        // 乱数の定義
+        const random = Math.floor(Math.random() * 2);
+        // 音階の定義
+        let w_music_deg;
+        let music_deg;
+        // リズムの定義
+        let music_rm;
+        // メッセージの定義
+        let message = "";
+        // 作業用配列
+        let array1 = [];
+        // 自動演奏用タイム変数
+        let work_time = 0;
+
+ 
+        if (random == 0){
+          music_note = tune_1;
+        } else {
+          music_note = tune_2;
+        }
+        
+        for(let i=0;i<music_note.length;i++){
+            array1 = music_note[i].split('/');
+            w_music_deg = array1[0];
+            music_rm = array1[1];
+            play_time = array1[2];
+            if (w_music_deg == "ド"){
+                music_reg = "C4";
+            } else if (w_music_deg == "レ"){
+                music_reg = "D4";
+            } else if (w_music_deg == "ミ"){
+                music_reg = "E4";
+            } else if (w_music_deg == "ファ"){
+                music_reg = "F4";
+            } else if (w_music_deg == "ソ"){
+                music_reg = "G4";
+            } else if (w_music_deg == "ラ"){
+               music_reg = "A4";
+            } else if (w_music_deg == "シ"){
+              music_reg = "B4";
+            }   
+  
+            display.textContent = w_music_deg;
+            synth.triggerAttackRelease(music_reg,music_rm);
+
+            setTimeout(function() {
+                display.textContent = "";
+            },display_seconds);
+
             
+        }  
+      }
+        
             
 
       // ピアノの音階をクリック
@@ -257,19 +308,19 @@
       
 
       autoplay1.addEventListener('click',function(){
-        flag = "auto"
         $(document).ready(function() {
             $(".keyboard").addClass("disable-div");
         });
         autoplay1.style.visibility = "hidden";
         autostop1.style.visibility = "visible";
-        play(flag);
+        auto_play();
       });
       
       autostop1.addEventListener('click',function(){
         $(document).ready(function() {
-            $(".keyboard").addClass("disable-div");
+            $(".keyboard").removeClass("disable-div");
         });
+        Tone.Transport.stop();
         autoplay1.style.visibility = "visible";
         autostop1.style.visibility = "hidden";
       });

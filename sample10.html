@@ -58,10 +58,10 @@
       height:50px;
       background-color:#FFF;
       margin:10px auto;
-     
+      display:flex; 
     }
 
-    .button1 #autoplay {
+    .button1 .but1 {
       width:calc(100% - 20px);
       height:35px;
       padding-top:8px;
@@ -73,10 +73,9 @@
       color:#80F;
       text-align: center;
       font-size:15px;
-      
-      
     }
 
+    
   </style>
 </head>
 <body>
@@ -98,12 +97,13 @@
       <div id="C5" class="key">ド</div>
     </div>  
     <div class="button1">
-      <input type="button" id="autoplay" name="autoplay" value="自動演奏">
+      <input type="button" id="autoplay" name="autoplay" class="but1" value="自動演奏">
+      <input type="button" id="autostop" name="autostop" class="but1" value="演奏中止">
     </div>
   </div>  
   <script>
       // AudioContext オブジェクトを新しく作成
-      let audioCtx;
+      var audioCtx;
       // ド(C4)～ド(B5)までのIDからオブジェクトを取得する
       const C4 = document.getElementById('C4');
       const D4 = document.getElementById('D4');
@@ -115,12 +115,13 @@
       const C5 = document.getElementById('C5');
       // 自動演奏ボタンの定義
       const autoplay = document.getElementById('autoplay');
-      // 手動演奏ボタンのオブジェクトを取得する
-      const manual_key = document.getElementsByClassName('key');
+      // 演奏中止ボタンのオブジェクトを取得する
+      const autostop = document.getElementById('autostop');
+      autostop.style.display = 'none';
       // 音階を格納する配列を定義する
-      const sound_array = ['ド','レ','ミ','ファ','ソ','ラ','シ','ド(高音)','休符'];
+      const sound_array = ['ド','レ','ミ','ファ','ソ','ラ','シ','ド(高音)'];
       // 周波数を格納する配列を定義する
-      const hz_array = [261,293,329,349,392,440,493,523,1];
+      const hz_array = [261,293,329,349,392,440,493,523];
       // 音階表示エリアのオブジェクトを定義する
       const display = document.getElementById('display');
       // タイマー変数の定義
@@ -144,7 +145,8 @@
             //出力先のスピーカーに接続
             osc.connect(audioDestination);
             
-            timer = setInterval(osc.start(),100);
+            timer = setInterval(osc.start(),250);
+            
             
             if (music1 !== null){
               display.textContent = music1;
@@ -155,7 +157,7 @@
             
             setTimeout(function()  {
                     osc.stop();
-                    clearInterval(timer)
+                    clearInterval(timer);
             },playing_seconds);
             
       }
@@ -211,11 +213,7 @@
         play(d,h);
       },false);
           
-      autoplay.addEventListener('click',autoplay1);
-          
-
-      function autoplay1() {
-        const array3 = [0,2,4,7];
+      autoplay.addEventListener('click',function() {
         C4.style.visibility = 'hidden';
         D4.style.visibility = 'hidden';
         E4.style.visibility = 'hidden';
@@ -224,10 +222,21 @@
         A4.style.visibility = 'hidden';
         B4.style.visibility = 'hidden';
         display.textContent = "自動演奏";
+        autoplay1();
+      },false);    
+
+      function autoplay1() {
+        const array3 = [0,2,4,7,7,4,2,0];
+        
         for(let j=0;j<array3.length;j++){
-            const number = array3[j];
-            play(null,hz_array[number]);
-            sleep();
+            if (array3[j] == 99){
+              AudioContext().createOscillator().stop();
+              sleep();
+            } else {  
+              const number = array3[j];
+              play(sound_array[number],hz_array[number]);
+              sleep();
+            }  
         } 
         C4.style.visibility = 'visible';
         D4.style.visibility = 'visible';
@@ -236,6 +245,7 @@
         G4.style.visibility = 'visible';
         A4.style.visibility = 'visible';
         B4.style.visibility = 'visible';
+
       }
 
       function sleep() {
@@ -247,6 +257,12 @@
             }
         }
       }
+
+      function autostop1() {
+            AudioContext().createOscillator().stop();
+            clearInterval(timer);
+      }      
+
 
 
   </script>
