@@ -108,7 +108,7 @@
       
       
       // AudioContext オブジェクトを新しく作成
-      var synth = new Tone.FMSynth().toMaster();;
+      var synth = new Tone.FMSynth().toMaster();
       // ド(C4)～シ(B4)までのIDから要素を取得する
       const C4 = document.getElementById('C4');
       const D4 = document.getElementById('D4');
@@ -144,8 +144,7 @@
         var message = null;
         // 作業用配列
         var array1 = [];
-        // 自動演奏用タイム変数
-        var work_time;
+        
          
                
         array1 = msg.split('/');
@@ -180,32 +179,32 @@
             display.textContent = null;
         },display_seconds);
 
-        //再生実行
-        timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),50);
-        
-        
-        // 処理待機処理
-        let sleep_time = music_rm * 1000;       
-        sleep(sleep_time);
-        
-        setTimeout(function() {
-          clearInterval(timer);
-        },music_rm);
-        
-        
-              
+        synth.triggerAttackRelease(music_reg,music_rm);
+
+      }  
+
+      function autoplay(){
+        const random = Math.floor(Math.random() * 2);
+        if (random == 0){
+          synth.triggerAttackRelease("C4",0.5);
+
+          synth.triggerAttackRelease(""/0.5);
+          synth.triggerAttackRelease("C4"/0.5);
+          synth.triggerAttackRelease(""/0.5);
+          synth.triggerAttackRelease("G4"/0.5);
+          synth.triggerAttackRelease('null/0.5');
+          synth.triggerAttackRelease("G4"/0.5);
+        } else if (random == 1) {
+          synth.triggerAttackRelease("C4",0.5);
+          synth.triggerAttackRelease("D4",0.5);
+          synth.triggerAttackRelease("E4",1);
+          synth.triggerAttackRelease("C4",0.5);
+          synth.triggerAttackRelease("D4",0.5);
+          synth.triggerAttackRelease("E4",1);
+        }
       }
       
-      // スリープ関数
-      function sleep(wait_time){
-        const start_time = new Date();
-        while(true){
-          let now_time = new Date();
-          if (now_time - start_time >= wait_time ){
-            break;
-          } 
-        }  
-      }
+      
           
       // 演奏終了関数
       function music_stop(){
@@ -256,137 +255,8 @@
         autoplay1.style.visibility = "hidden";
         autostop1.style.visibility = "visible";
         // 乱数の定義
-        const random = Math.floor(Math.random() * 2);
-        if (random == 0){
-          play('ド/0.5');
-          play('null/0.5');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ソ/2');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5')
-          play('ド/2');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/2');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/2');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ソ/2');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5')
-          play('ド/4');
-
-        } else if (random == 1) {
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ソ/0.5');
-          play('ミ/0.5');
-          play('レ/0.5');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/0.5');
-          play('レ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ソ/0.5');
-          play('ミ/0.5');
-          play('レ/0.5');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/0.5');
-          play('ド/1');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ラ/0.25');
-          play('null/0.25');
-          play('ラ/0.25');
-          play('null/0.25');
-          play('ソ/1');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('レ/0.25');
-          play('null/0.25');
-          play('レ/0.25');
-          play('null/0.25');
-          play('ド/4');
-        }
+        autoplay();
+        
         music_stop();
         
       });

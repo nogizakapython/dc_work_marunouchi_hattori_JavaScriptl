@@ -180,32 +180,22 @@
             display.textContent = null;
         },display_seconds);
 
+        const count_num = music_rm / 50;
+        console.log(count_num);
+        let i = 0;
         //再生実行
-        timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),50);
+        synth.triggerAttackRelease(music_reg,music_rm);
+        timer = setInterval(event,50); 
         
-        
-        // 処理待機処理
-        let sleep_time = music_rm * 1000;       
-        sleep(sleep_time);
-        
-        setTimeout(function() {
-          clearInterval(timer);
-        },music_rm);
-        
-        
-              
+        function event() {
+          i++;
+          if (i == count_num) {
+            Tone.Transport.stop();
+            clearInterval(timer);
+          }
+        }
       }
       
-      // スリープ関数
-      function sleep(wait_time){
-        const start_time = new Date();
-        while(true){
-          let now_time = new Date();
-          if (now_time - start_time >= wait_time ){
-            break;
-          } 
-        }  
-      }
           
       // 演奏終了関数
       function music_stop(){

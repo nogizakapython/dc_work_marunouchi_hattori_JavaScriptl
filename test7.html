@@ -170,28 +170,42 @@
                     display.textContent = "";
                
             },display_seconds);
-            timer = setInterval(osc.start(),50);
             
+            timer = setInterval(osc.start(),50);
             sleep(play_time);
             
-            
-            
-            
-             
-          }  
 
-          function sleep(play_time){
-            const start_time = new Date();
-            while(true){
-              var now_time = new Date();
-              if (now_time - start_time >= play_time){
-                clearInterval(timer);
-                AudioContext().createOscillator().stop();
-                break;
-              }
-            }
+            setTimeout(function() {
+              clearInterval(timer);
+              AudioContext().createOscillator().stop();
+              
+            },play_time);
+          }  
+          
+          
+
+          // スリープ関数
+          function sleep(wait_time){
+              const start_time = new Date();
+              while(true){
+                let now_time = new Date();
+                if (now_time - start_time >= wait_time ){
+                  break;
+                } 
+              }  
           }
-             
+
+
+
+          function stop_play(){
+            $(document).ready(function() {
+              $(".keyboard").removeClass("disable-div");
+            });
+            AudioContext().createOscillator().stop();
+            autoplay1.style.visibility = "visible";
+            autostop1.style.visibility = "hidden";
+          }  
+            
 
           // ピアノの音階をクリック
           C4.addEventListener('click',function() {
@@ -252,15 +266,11 @@
               play("レ",500);
               play("ミ",1000);
             }
+            stop_play();
           });
       
           autostop1.addEventListener('click',function(){
-            $(document).ready(function() {
-              $(".keyboard").removeClass("disable-div");
-            });
-            AudioContext().createOscillator().stop();
-            autoplay1.style.visibility = "visible";
-            autostop1.style.visibility = "hidden";
+              stop_play();    
           });
       
 
