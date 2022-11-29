@@ -44,7 +44,6 @@
       margin:20px auto;
       display:flex;
     }
-
     .keyboard .key {
       width:calc(100% / 7 - 10px);
       height:40px;
@@ -76,10 +75,14 @@
       text-align: center;
       font-size:15px;
       display:block;
+      
+      
     }
     .disable-div {
       pointer-events: none;
     }
+
+
   </style>
 	</head>
 	<body>
@@ -133,8 +136,16 @@
       let work_time;
       // 初期ロード時、演奏中止ボタンを非表示にする
       autostop1.style.visibility = "hidden";
+      // タイム変数
+      var time;
+      
+
+
       
       function play(msg){
+
+        
+        
         // 音階の定義
         var w_music_deg;
         var music_deg;
@@ -144,10 +155,11 @@
         var message = null;
         // 作業用配列
         var array1 = [];
-        // 自動演奏用タイム変数
-        var work_time;
+        
+
          
-               
+
+                
         array1 = msg.split('/');
         w_music_deg = array1[0];
         music_rm = array1[1];
@@ -181,23 +193,26 @@
         },display_seconds);
 
         //再生実行
-        timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),music_rm);
+        // synth.triggerAttackRelease(music_reg,music_rm,time);
+        timer = setInterval(function(){
+          synth.triggerAttackRelease(music_reg,music_rm);
+          // synth.triggerAttack(music_reg,music_rm,time);
+          // synth.triggerRelease(music_reg,music_rm,time + music_rm);
+        },100);
         
-        // 処理待機処理
-        let sleep_time = parseInt(music_rm * 1000);       
-        sleep(sleep_time);
+         処理待機処理
+         let sleep_time = parseInt(music_rm * 1000);       
+         sleep(sleep_time);
         
-        setTimeout(function() {
-          clearInterval(timer);
-          Tone.Transport.stop();
-        },display_seconds);
+         clearInterval(timer);
         
+       
         
               
       }
       
       // スリープ関数
-      async function sleep(wait_time){
+      function sleep(wait_time){
         const start_time = new Date();
         while(true){
           if (new Date() - start_time >= wait_time ){
@@ -205,18 +220,19 @@
           }
         }  
       }
-          
-      // 演奏終了関数
-      function music_stop(){
-        $(document).ready(function() {
-            $(".keyboard").removeClass("disable-div");
-        });
-        Tone.Transport.stop();
-        autoplay1.style.visibility = "visible";
-        autostop1.style.visibility = "hidden";
-      }  
+      
+      // 演奏ストップ処理
+      function play_stop(){
+          $(document).ready(function() {
+              $(".keyboard").removeClass("disable-div");
+          });
+          Tone.Transport.stop();
+          autoplay1.style.visibility = "visible";
+          autostop1.style.visibility = "hidden";
+      }    
+            
 
-     // ピアノの音階をクリック
+      // ピアノの音階をクリック
       C4.addEventListener('click',function() {
           play(`ド/${playing_seconds}`);
       },false);
@@ -248,6 +264,7 @@
       },false);
           
       
+
       autoplay1.addEventListener('click',async function(){
         $(document).ready(function() {
             $(".keyboard").addClass("disable-div");
@@ -386,13 +403,16 @@
           play('null/0.25');
           play('ド/4');
         }
-        music_stop();
+        play_stop();
         
       });
       
       autostop1.addEventListener('click',function(){
-        music_stop();
+        play_stop();
       });
+      
+
+
   </script>
 	</body>
 </html>
