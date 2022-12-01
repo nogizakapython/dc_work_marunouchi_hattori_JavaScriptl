@@ -26,22 +26,22 @@
       height:100px;
       background-color: #F799FF;
       padding-top:30px;
-      margin-top:20px;
-      margin:auto;
+      margin-left:30px;
     }
 
     .music #display {
       width:95%;
       text-align:center;
-      font-size:33px;
+      font-size:30px;
       color:#0031FF;
     }
 
     .keyboard {
       width:490px;
       height:70px;
-      background-color:#FFF;
-      margin:20px auto;
+      background-color:#C8FF19;
+      margin-top:30px;
+      margin-left:30px;
       display:flex;
     }
 
@@ -64,16 +64,16 @@
     }
 
     #btn div {
-      font-size: 30px;
+      font-size: 25px;
       line-height: 1em;
       background: #8fff0f;
       border: 2px solid #ccc;
       border-radius: 10px;
       text-align: center;
       width: 150px;
-      padding: 30px 50px;
+      padding: 10px 10px;
       display: block;
-      
+      margin-left:30px;
     }
 
     .disable-div {
@@ -116,6 +116,7 @@
       const G4 = document.getElementById('G4');
       const A4 = document.getElementById('A4');
       const B4 = document.getElementById('B4');
+            
       // 自動演奏ボタンの要素を取得する
       const autoplay1 = document.querySelector('#autoplay1');
       // 自動演奏ストップボタンの要素を取得する
@@ -239,69 +240,69 @@
 
       // チューリップの花
       const turipu = [
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'G4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'G4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'D4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'G4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'G4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'E4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'G4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'A4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'A4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'G4', 'duration': 0.5 },
-                        { "note": 'G4', 'duration': 0.5 },
-                        { "note": 'E4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'E4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'D4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'D4', 'duration': 0.25 },
-                        { "note": '', 'duration': 0.25 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 },
-                        { "note": 'C4', 'duration': 0.5 }
-              ];   
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'G4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'G4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'D4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'G4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'G4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'E4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'G4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'A4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'A4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'G4', 'duration': 0.5 },
+                      { "note": 'G4', 'duration': 0.5 },
+                      { "note": 'E4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'E4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'D4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'D4', 'duration': 0.25 },
+                      { "note": '', 'duration': 0.25 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 },
+                      { "note": 'C4', 'duration': 0.5 }
+            ];   
 
     // きらきら星の再生時間の変数定義
     var kirakira_time;
@@ -324,8 +325,7 @@
         var message = null;
         // 作業用配列
         var array1 = [];
-        // 自動演奏用タイム変数
-        var work_time;
+        
          
                
         array1 = msg.split('/');
@@ -357,7 +357,7 @@
 
                
         setTimeout(function() {
-            display.textContent = null;
+            display.textContent = "";
         },display_seconds);
 
         //再生実行
@@ -368,6 +368,7 @@
         },music_rm);
         
       }
+
       
               
       // 演奏終了関数
@@ -413,17 +414,13 @@
           kirakira_time += work_data.duration;
         }
 
-        console.log(kirakira_time);
-  
         work_data = "";
 
 
-        for(let i=0;i<turipu.length;i++){
-          work_data = kirakira[i];
+        for(let j=0;j<turipu.length;j++){
+          work_data = kirakira[j];
           turipu_time += work_data.duration;
         }
-
-        console.log(turipu_time);
 
         //再生設定
         function setPlay(time, note) {
@@ -468,7 +465,7 @@
         music_stop();
       });
 
-     // ピアノの音階をクリック
+     // ピアノの音階をクリックした時に音を鳴らす
       C4.addEventListener('click',function() {
           manual_play(`ド/${playing_seconds}`);
       },false);
@@ -499,7 +496,7 @@
           manual_play(`シ/${playing_seconds}`);
       },false);
           
-      
+           
       
   </script>
 	</body>
