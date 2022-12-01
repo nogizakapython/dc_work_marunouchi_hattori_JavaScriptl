@@ -22,7 +22,7 @@
     }
 
     .piano .music {
-      width:400px;
+      width:500px;
       height:100px;
       background-color: #F799FF;
       padding-top:30px;
@@ -33,7 +33,7 @@
     .music #display {
       width:95%;
       text-align:center;
-      font-size:40px;
+      font-size:33px;
       color:#0031FF;
     }
 
@@ -57,26 +57,25 @@
       font-size:18px;
     }
 
-    .autobutton {
-      margin-top:20px;
-      display:flex;
-      justify-content: center;
+    #btn {
+      display: flex;
+      justify-content: center; 
+      
     }
 
-    .autobutton .button1  {
-      width:150px;
-      height:35px;
-      padding-top:8px;
-      padding-left:8px;
-      margin-left:5px;
-      margin-right:5px;
-      border-color :2px #000;
-      background-color:#0AA;
-      color:#80F;
+    #btn div {
+      font-size: 30px;
+      line-height: 1em;
+      background: #8fff0f;
+      border: 2px solid #ccc;
+      border-radius: 10px;
       text-align: center;
-      font-size:15px;
-      display:block;
+      width: 150px;
+      padding: 30px 50px;
+      display: block;
+      
     }
+
     .disable-div {
       pointer-events: none;
     }
@@ -99,10 +98,10 @@
         <div id="A4" class="key">ラ</div>
         <div id="B4" class="key">シ</div>
       </div>
-      <div class="autobutton">    
-		    <input type="button" id="autoplay1" name="autoplay" class="button1" value="自動演奏">
-        <input type="button" id="autostop1" name="autostop" class="button1" value="演奏中止">
-      </div>
+      <div id="btn">
+        <div id="autoplay1">自動演奏</div>
+        <div id="autostop1">演奏中止</div>
+     </div>
     </div>    
     <script>
       
@@ -132,9 +131,190 @@
       // 音を鳴らしている時間
       let work_time;
       // 初期ロード時、演奏中止ボタンを非表示にする
-      autostop1.style.visibility = "hidden";
+      autostop1.style.display = "none";
+
+      //きらきら星
+      const kirakira = [
+                        { 'note': 'C4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'A4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'A4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { 'note': 'C4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'A4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'A4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'F4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": '', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 }
+      ];
+
+      // チューリップの花
+      const turipu = [
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'D4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'G4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'E4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'G4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'A4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'A4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'G4', 'duration': 0.5 },
+                        { "note": 'E4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'E4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'D4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'D4', 'duration': 0.25 },
+                        { "note": '', 'duration': 0.25 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 },
+                        { "note": 'C4', 'duration': 0.5 }
+              ];   
+
+    // きらきら星の再生時間の変数定義
+    var kirakira_time;
+    // チューリップの再生時間の変数定義
+    var turipu_time;
+    // 演奏時間の変数定義
+    var playing_time;
+    // 作業用オブジェクトの格納変数
+    var work_data;
+    // TimeOutの変数定義
+    var timeid;
       
-      function play(msg){
+    function manual_play(msg){
         // 音階の定義
         var w_music_deg;
         var music_deg;
@@ -183,217 +363,144 @@
         //再生実行
         timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),50);
         
-        
-        // 処理待機処理
-        let sleep_time = music_rm * 1000;       
-        sleep(sleep_time);
-        
         setTimeout(function() {
           clearInterval(timer);
         },music_rm);
         
-        
-              
       }
       
-      // スリープ関数
-      function sleep(wait_time){
-        const start_time = new Date();
-        while(true){
-          let now_time = new Date();
-          if (now_time - start_time >= wait_time ){
-            break;
-          } 
-        }  
-      }
-          
+              
       // 演奏終了関数
       function music_stop(){
         $(document).ready(function() {
             $(".keyboard").removeClass("disable-div");
         });
+        //ボタン表示切替
+        autostop1.style.display = "none";
+        autoplay1.style.display = "block";
+
+        display.textContent = "";
+
+        //停止実行
         Tone.Transport.stop();
-        autoplay1.style.visibility = "visible";
-        autostop1.style.visibility = "hidden";
+        //イベントクリア
+        Tone.Transport.cancel();
+        // setTimeoutのクリア
+        clearTimeout(timeid);
       }  
 
-     // ピアノの音階をクリック
-      C4.addEventListener('click',function() {
-          play(`ド/${playing_seconds}`);
-      },false);
-
-      D4.addEventListener('click',function() {
-          play(`レ/${playing_seconds}`);
-      },false);
-          
-      E4.addEventListener('click',function() {
-          play(`ミ/${playing_seconds}`);
-            
-      },false);
-          
-      F4.addEventListener('click',function() {
-          play(`ファ/${playing_seconds}`);
-      },false);
-          
-      G4.addEventListener('click',function() {
-          play(`ソ/${playing_seconds}`);
-      },false);
-          
-      A4.addEventListener('click',function() {
-          play(`ラ/${playing_seconds}`);
-          
-      },false);
-          
-      B4.addEventListener('click',function() {
-          play(`シ/${playing_seconds}`);
-      },false);
-          
-      
       autoplay1.addEventListener('click',async function(){
         $(document).ready(function() {
             $(".keyboard").addClass("disable-div");
         });
-        autoplay1.style.visibility = "hidden";
-        autostop1.style.visibility = "visible";
+         //ボタン表示切替
+        autoplay1.style.display = "none";
+        autostop1.style.display = "block";
+        // 演奏時間変数の初期化
+        kirakira_time = 0;
+        turipu_time = 0;
+        playing_time = 0;
+
+
+        //音源
+        const synth = new Tone.AMSynth().toMaster();
+
         // 乱数の定義
         const random = Math.floor(Math.random() * 2);
-        if (random == 0){
-          play('ド/0.5');
-          play('null/0.5');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ソ/2');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5')
-          play('ド/2');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/2');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/2');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ド/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ソ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ラ/0.5');
-          play('null/0.5');
-          play('ソ/2');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ファ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('ミ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5');
-          play('レ/0.5');
-          play('null/0.5')
-          play('ド/4');
-
-        } else if (random == 1) {
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ソ/0.5');
-          play('ミ/0.5');
-          play('レ/0.5');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/0.5');
-          play('レ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/1');
-          play('ソ/0.5');
-          play('ミ/0.5');
-          play('レ/0.5');
-          play('ド/0.5');
-          play('レ/0.5');
-          play('ミ/0.5');
-          play('ド/1');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('ソ/0.25');
-          play('null/0.25');
-          play('ラ/0.25');
-          play('null/0.25');
-          play('ラ/0.25');
-          play('null/0.25');
-          play('ソ/1');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('ミ/0.25');
-          play('null/0.25');
-          play('レ/0.25');
-          play('null/0.25');
-          play('レ/0.25');
-          play('null/0.25');
-          play('ド/4');
+  
+        for(let i=0;i<kirakira.length;i++){
+          work_data = kirakira[i];
+          kirakira_time += work_data.duration;
         }
-        music_stop();
+
+        console.log(kirakira_time);
+  
+        work_data = "";
+
+
+        for(let i=0;i<turipu.length;i++){
+          work_data = kirakira[i];
+          turipu_time += work_data.duration;
+        }
+
+        console.log(turipu_time);
+
+        //再生設定
+        function setPlay(time, note) {
+          synth.triggerAttackRelease(note.note, note.duration, time);
+        }
+
+        //メロディをセット 
+        if (random == 0){  
+          melody = new Tone.Sequence(setPlay, kirakira);
+          playing_time = kirakira_time;
+          display.textContent = "自動演奏中です：きらきら星";
+        } else {
+          melody = new Tone.Sequence(setPlay, turipu);
+          playing_time = turipu_time;
+          display.textContent = "自動演奏中です：チューリップの歌";
+        } 
+  
+  
+
+        //メロディ再生
+        melody.start();
+
+        //ループ設定(繰り返し再生しない設定)
+        melody.loop = false;
+  
+
+  
+
+        //再生実行
+        Tone.Transport.start();
+
+        // 演奏終了したらボタンの表示切替と停止処理を行う
+        timeid = setTimeout(function() {
+            music_stop();
+        },playing_time * 1000);
+
+  
         
       });
       
       autostop1.addEventListener('click',function(){
         music_stop();
       });
+
+     // ピアノの音階をクリック
+      C4.addEventListener('click',function() {
+          manual_play(`ド/${playing_seconds}`);
+      },false);
+
+      D4.addEventListener('click',function() {
+          manual_play(`レ/${playing_seconds}`);
+      },false);
+          
+      E4.addEventListener('click',function() {
+          manual_play(`ミ/${playing_seconds}`);
+            
+      },false);
+          
+      F4.addEventListener('click',function() {
+          manual_play(`ファ/${playing_seconds}`);
+      },false);
+          
+      G4.addEventListener('click',function() {
+          manual_play(`ソ/${playing_seconds}`);
+      },false);
+          
+      A4.addEventListener('click',function() {
+          manual_play(`ラ/${playing_seconds}`);
+          
+      },false);
+          
+      B4.addEventListener('click',function() {
+          manual_play(`シ/${playing_seconds}`);
+      },false);
+          
+      
+      
   </script>
 	</body>
 </html>

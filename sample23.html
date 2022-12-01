@@ -31,7 +31,7 @@ h1, p {
 #btn div {
   font-size: 25px;
   line-height: 1em;
-  background: #eee;
+  background: #8fff0f;
   border: 2px solid #ccc;
   border-radius: 10px;
   text-align: center;
@@ -247,7 +247,16 @@ h1, p {
                       { "note": 'C4', 'duration': 0.5 }
             ];   
 
-
+// きらきら星の再生時間の変数定義
+var kirakira_time;
+// チューリップの再生時間の変数定義
+var turipu_time;
+// 演奏時間の変数定義
+var playing_time;
+// 作業用オブジェクトの格納変数
+var work_data;
+// TimeOutの変数定義
+var timeid;
 
 //再生ボタン
 play.addEventListener("click", function () {
@@ -255,16 +264,34 @@ play.addEventListener("click", function () {
   //ボタン表示切替
   play.style.display = "none";
   stop1.style.display = "block";
+  // 演奏時間変数の初期化
+  kirakira_time = 0;
+  turipu_time = 0;
+  playing_time = 0;
+
 
   //音源
   const synth = new Tone.AMSynth().toMaster();
 
   // 乱数の定義
-  // const random = Math.floor(Math.random() * 2);
-  const random = 1;
+  const random = Math.floor(Math.random() * 2);
   
+  for(let i=0;i<kirakira.length;i++){
+    work_data = kirakira[i];
+    kirakira_time += work_data.duration;
+  }
+
+  console.log(kirakira_time);
   
-  
+  work_data = "";
+
+
+  for(let i=0;i<turipu.length;i++){
+    work_data = kirakira[i];
+    turipu_time += work_data.duration;
+  }
+
+  console.log(turipu_time);
 
   //再生設定
   function setPlay(time, note) {synth.triggerAttackRelease(note.note, note.duration, time);}
@@ -272,14 +299,18 @@ play.addEventListener("click", function () {
   //メロディをセット 
   if (random == 0){  
     melody = new Tone.Sequence(setPlay, kirakira);
+    playing_time = kirakira_time;
   } else {
     melody = new Tone.Sequence(setPlay, turipu);
-  }  
+    playing_time = turipu_time;
+  } 
+  
+  
 
   //メロディ再生
   melody.start();
 
-  //ループ（デフォルトでfalse）
+  //ループ設定
   melody.loop = false;
   
 
@@ -287,6 +318,23 @@ play.addEventListener("click", function () {
 
   //再生実行
   Tone.Transport.start();
+
+  // 演奏終了したらボタンの表示切替と停止処理を行う
+  timeid = setTimeout(function() {
+      //ボタン表示切替
+      stop1.style.display = "none";
+      play.style.display = "block";
+
+      //停止実行
+      Tone.Transport.stop();
+      //イベントクリア
+      Tone.Transport.cancel();
+
+      clearTimeout(timeid);
+  },playing_time * 1000);
+
+  
+
 }, false);
 
 
@@ -301,6 +349,9 @@ stop1.addEventListener("click", function () {
   Tone.Transport.stop();
   //イベントクリア
   Tone.Transport.cancel();
+
+  clearTimeout(timeid);
+  
 
 }, false);
 //# sourceURL=pen.js
