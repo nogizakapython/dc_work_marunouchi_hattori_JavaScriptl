@@ -2,6 +2,7 @@
 <!-- 新規作成 2022/11/20 -->
 <!-- 機能追加 2022/11/23(音量の調節機能) -->
 <!-- 再生終了ボタンを追加 2022/11/23 -->
+<!-- 再生終了チェック処理を追加 2022/12/2 -->
 <!-- music Pot -->
 <!-- お気に入りの曲を流すWebアプリ -->
 <html lang="ja">
@@ -159,7 +160,7 @@
 
 
         music.src = `./sound/${file}`; //音声ファイル指定
-        music.volume = 0.4; //音量の初期値(50%)
+        music.volume = 0.4; //音量の初期値(40%)
 
         
     
@@ -270,13 +271,13 @@
             s_mute.disabled = true;
         }
     
-        function loop_true() { //ループ再生ON
-            music.loop = true;
-        }
+        // function loop_true() { //ループ再生ON
+            // music.loop = true;
+        // }
     
-        function loop_false(){ //ループ再生OFF
-            music.loop = false;
-        }
+        // function loop_false(){ //ループ再生OFF
+            // music.loop = false;
+        // }
     
         
     
