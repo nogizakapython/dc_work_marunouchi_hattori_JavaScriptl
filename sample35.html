@@ -390,6 +390,34 @@
         clearTimeout(timeid);
       }  
 
+      // 演奏時間取得関数
+      function get_play_time(){
+          
+        for(let i=0;i<kirakira.length;i++){
+          work_data = kirakira[i];
+          kirakira_time += work_data.duration;
+        }
+
+        work_data = "";
+
+
+        for(let j=0;j<turipu.length;j++){
+          work_data = kirakira[j];
+          turipu_time += work_data.duration;
+        }
+
+      }
+
+      // 自動演奏中の曲名点滅処理(500ミリ秒毎に5回点滅させて表示し続ける)
+      function auto_display(){
+        for(let i=1;i<=5;i++){
+          $('#display').fadeIn(500);
+          $('#display').fadeOut(500);
+        }
+        $('#display').fadeIn();  
+      }
+      
+
       autoplay1.addEventListener('click',async function(){
         $(document).ready(function() {
             $(".keyboard").addClass("disable-div");
@@ -408,20 +436,10 @@
 
         // 乱数の定義
         const random = Math.floor(Math.random() * 2);
-  
-        for(let i=0;i<kirakira.length;i++){
-          work_data = kirakira[i];
-          kirakira_time += work_data.duration;
-        }
-
-        work_data = "";
-
-
-        for(let j=0;j<turipu.length;j++){
-          work_data = kirakira[j];
-          turipu_time += work_data.duration;
-        }
-
+        
+        // 演奏時間関数を呼び出す
+        get_play_time();
+        
         //再生設定
         function setPlay(time, note) {
           synth.triggerAttackRelease(note.note, note.duration, time);
@@ -451,6 +469,8 @@
 
         //再生実行
         Tone.Transport.start();
+
+        auto_display()
 
         // 演奏終了したらボタンの表示切替と停止処理を行う
         timeid = setTimeout(function() {
