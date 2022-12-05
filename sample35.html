@@ -76,6 +76,21 @@
       margin-left:30px;
     }
 
+    .restkey{
+      justify-content: center; 
+      width:80px;
+      margin-top:10px;
+      margin-left:220px;
+    }
+    .restkey #rest {
+      width:calc(80px - 5%);
+      color:#C90;
+      background-color:aquamarine ;
+      font-size:20px;
+      text-align: center;
+
+    }
+
     .disable-div {
       pointer-events: none;
     }
@@ -98,16 +113,21 @@
         <div id="A4" class="key">ラ</div>
         <div id="B4" class="key">シ</div>
       </div>
+      <!-- 自動演奏ボタン -->
       <div id="btn">
         <div id="autoplay1">自動演奏</div>
         <div id="autostop1">演奏中止</div>
+     </div>
+     <!-- 休符ボタン -->
+     <div class="restkey">
+        <div id="rest" class="rest1">休符</div>
      </div>
     </div>    
     <script>
       
       
       // AudioContext オブジェクトを新しく作成
-      var synth = new Tone.FMSynth().toMaster();;
+      var synth = new Tone.FMSynth().toMaster();
       // ド(C4)～シ(B4)までのIDから要素を取得する
       const C4 = document.getElementById('C4');
       const D4 = document.getElementById('D4');
@@ -123,6 +143,8 @@
       const autostop1 = document.querySelector('#autostop1');
       // 音階表示エリアのオブジェクトを定義する
       const display = document.getElementById('display');
+      // 休符ボタンの要素を取得する
+      const rest = document.getElementById('rest');
       // タイマー変数の定義
       let timer;
       // 音を鳴らす時間の設定
@@ -133,6 +155,7 @@
       let work_time;
       // 初期ロード時、演奏中止ボタンを非表示にする
       autostop1.style.display = "none";
+      
 
       //きらきら星
       const kirakira = [
@@ -316,15 +339,17 @@
     var timeid;
       
     function manual_play(msg){
+        //音源
+        const synth = new Tone.AMSynth().toMaster();
         // 音階の定義
         var w_music_deg;
         var music_deg;
         // リズムの定義
         var music_rm;
-        // メッセージの定義
-        var message = null;
         // 作業用配列
         var array1 = [];
+        // 作業用配列
+        var array2 = [];
         
          
                
@@ -345,25 +370,28 @@
           music_reg = "A4";
         } else if (w_music_deg == "シ"){
           music_reg = "B4";
-        } else if (w_music_deg == null){
-          music_reg = null;
-        }    
+        } 
+        
+        display.textContent = w_music_deg;
           
-        if (w_music_deg == null ){
-          display.textContent = null;  
-        } else {
-          display.textContent = w_music_deg;
-        }  
 
                
         setTimeout(function() {
             display.textContent = "";
         },display_seconds);
 
+        timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),250);
+
         //再生実行
-        timer = setInterval(synth.triggerAttackRelease(music_reg,music_rm),50);
+        Tone.Transport.start();
+        
+        
         
         setTimeout(function() {
+          //イベントクリア
+          Tone.Transport.stop();
+          Tone.Transport.cancel();
+          // setTimeoutのクリア
           clearInterval(timer);
         },music_rm);
         
@@ -375,6 +403,8 @@
       function music_stop(){
         $(document).ready(function() {
             $(".keyboard").removeClass("disable-div");
+            $(".restkey").removeClass("disable-div");
+
         });
         //ボタン表示切替
         autostop1.style.display = "none";
@@ -390,9 +420,10 @@
         clearTimeout(timeid);
       }  
 
-      // 演奏時間取得関数
+      // 演奏時間取得関数(きらきら星とチューリップの曲の演奏時間を取得する)
       function get_play_time(){
-          
+        
+        // きらきら星の演奏時間を取得
         for(let i=0;i<kirakira.length;i++){
           work_data = kirakira[i];
           kirakira_time += work_data.duration;
@@ -400,7 +431,7 @@
 
         work_data = "";
 
-
+        // チューリップの演奏時間を取得
         for(let j=0;j<turipu.length;j++){
           work_data = kirakira[j];
           turipu_time += work_data.duration;
@@ -408,19 +439,34 @@
 
       }
 
-      // 自動演奏中の曲名点滅処理(500ミリ秒毎に5回点滅させて表示し続ける)
+      // 自動演奏中の曲名点滅処理(500ミリ秒毎に10回点滅させて表示し続ける)
       function auto_display(){
-        for(let i=1;i<=5;i++){
+        for(let i=1;i<=10;i++){
           $('#display').fadeIn(500);
           $('#display').fadeOut(500);
         }
         $('#display').fadeIn();  
       }
-      
 
+      //演奏する楽譜のセット処理
+      function setPlay(time, note) {
+          synth.triggerAttackRelease(note.note, note.duration, time);
+      }
+
+      // 休符処理
+      function manual_stop() {
+        display.textContent = "";
+        //停止実行
+        Tone.Transport.stop();
+        //イベントクリア
+        Tone.Transport.cancel();  
+      }  
+      
+      //自動演奏ボタンクリック時の処理 
       autoplay1.addEventListener('click',async function(){
         $(document).ready(function() {
             $(".keyboard").addClass("disable-div");
+            $(".restkey").addClass("disable-div");
         });
          //ボタン表示切替
         autoplay1.style.display = "none";
@@ -440,10 +486,7 @@
         // 演奏時間関数を呼び出す
         get_play_time();
         
-        //再生設定
-        function setPlay(time, note) {
-          synth.triggerAttackRelease(note.note, note.duration, time);
-        }
+        
 
         //メロディをセット 
         if (random == 0){  
@@ -481,9 +524,12 @@
         
       });
       
+      // 演奏中止ボタンをクリックしたときのイベントリスナー
       autostop1.addEventListener('click',function(){
         music_stop();
       });
+
+            
 
      // ピアノの音階をクリックした時に音を鳴らす
       C4.addEventListener('click',function() {
@@ -515,7 +561,10 @@
       B4.addEventListener('click',function() {
           manual_play(`シ/${playing_seconds}`);
       },false);
-          
+
+      rest.addEventListener('click',function() {
+          manual_stop();
+      },false)
            
       
   </script>
