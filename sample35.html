@@ -417,7 +417,6 @@
           display.textContent = "";
           clearTimeout(one);
           clearInterval(timer);
-          console.log(o[id]);
           o[id].a.osc.stop();
           o[id].a.osc.disconnect();
           o[id].a.context.close().then(() => delete o[id]);
