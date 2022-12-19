@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>きらきら星（自動演奏文字テスト)</title>
+  <style>
+    h3 {
+      color:blue;
+    }
+    
+    #test1 {
+      color:red;
+      width:200px;
+      font-size:30px;
+    }
+  </style>
+</head>
+
+<body>
+  <h3>非同期テスト1</h3>
+  <div id="test1"></div>
+  <script>
+    const test1 = document.getElementById('test1');
+    new Promise(resolve => {
+      setTimeout(() => {
+        test1.textContent = "ド";
+        resolve();
+      },0)
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ド";
+          resolve();
+        },500)
+      });
+    }).then(() =>{
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ソ";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ソ";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ラ";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ラ";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ソ";
+          resolve();
+        },500)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },1000)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "ファ";
+          resolve();
+        },1000)
+      });
+    }).then(() => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          test1.textContent = "";
+          resolve();
+        },500)
+      });
+    });
+
+
+
+  </script>
+</body>
+</html>

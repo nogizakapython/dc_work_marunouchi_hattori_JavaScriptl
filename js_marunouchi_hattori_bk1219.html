@@ -431,7 +431,7 @@
             timer = setInterval(a.osc.start(),250);
 
             // 1000ミリ秒経過したら音階出力を削除する 
-            one = setTimeout(function() {
+            one = setTimeput(function() {
                     display.textContent = "";
                   },display_seconds);
       }
@@ -484,7 +484,7 @@
         Tone.Transport.stop();
         //イベントクリア
         Tone.Transport.cancel();
-        // setTimeoutのクリア
+        // setTimeputのクリア
         clearTimeout(timeid);
         // 音階表示のクリア
         clearTimeout(auto_tune_work);
@@ -573,7 +573,7 @@
         auto_display();
 
         // 演奏終了したらボタンの表示切替と停止処理を行う
-        timeid = setTimeout(function() {
+        timeid = setTimeput(function() {
             music_stop();
         },playing_time * 1000);
               
@@ -583,255 +583,255 @@
       function auto_kirakira_disp (){
         display.context = "ド";
          
-        settimeout(function() {
+        setTimeput(function() {
               display.context = "";
           },500);
           
-        settimeout(function() {
+        setTimeput(function() {
                 display.context = "ド";
         },1000);
         
-        settimeout(function() {
+        setTimeput(function() {
                 display.context = "";
         },1500);
-        settimeout(function() {
+        setTimeput(function() {
               display.context = "ソ";
         },2000);
-        settimeout(function() {
+        setTimeput(function() {
               display.context = "";
         },2500);
-        settimeout(function() {
+        setTimeput(function() {
               display.context = "ソ";
         },3000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },3500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },4000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },4500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },5000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },5500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },6000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },7000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },8000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },8500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },9000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },9500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },10000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },10500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },11000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },11500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },12000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },12500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },13000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },13500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },14000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },15000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },16000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },16500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },17000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },17500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },18000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },18500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },19000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },19500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },20000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },20500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },21000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },21500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },22000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },23000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },24000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },24500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },25000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },25500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },26000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },26500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },27000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },27500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },28000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },28500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },29000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },29500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },30000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },31000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },32000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },32500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },33000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },33500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },34000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },34500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },35000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },35500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },36000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },36500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },37000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },37500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },38000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },39000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },40000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },40500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ファ";
         },41000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },41500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },42000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },42500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },43000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },43500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },45000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },45500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },46000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },46500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },47000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },48000);
       }
@@ -840,148 +840,148 @@
       function auto_turipu_disp(){
          display.context = "ド";
           
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },1000);
-        settimeout(function(){
+        setTimeput(function(){
           display.context = "ド";
         },2000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },2500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },3000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },4000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },4500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },5000);
-        settimeout(function(){
+        setTimeput(function(){
           display.context = "ド";
         },5500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },6000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },6500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },7000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },8000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },8500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },9000);
-        settimeout(function(){
+        setTimeput(function(){
           display.context = "ド";
         },10000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },10500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },11000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },12000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },12500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },13000);
-        settimeout(function(){
+        setTimeput(function(){
           display.context = "ド";
         },13500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },14000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },14500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },15000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },16000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },16250);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },16500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },16750);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },17000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },17250);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },17500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },17750);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },18000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },18250);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ラ";
         },18500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },18750);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ソ";
         },19000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },20000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },20250);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ミ";
         },20500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },20750);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },21000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },21250);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "レ";
         },21500);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },21750);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "ド";
         },22000);
-        settimeout(function() {
+        setTimeput(function() {
           display.context = "";
         },23000);
       }
