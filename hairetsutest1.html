@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>配列テスト5</title>
+  <style>
+    .test1 {
+      font-size:18px;
+      color:#20F4c1;
+    }
+
+    
+
+  </style>
+</head>
+<body>
+  <script>
+      const array1 = [10,10,40,20,20,30,50,40,70,60,90,70];
+      // 重複した値を取り除くSetオブジェクトを呼び出す
+      let array2 = new Set(array1);
+      // array2を配列に変換する
+      array2 = Array.from(array2);
+      array2.forEach((data) => {
+        document.write(`<p class="test1">${data}</p>`);
+      });
+  </script>
+</body>
+</html>
