@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スプレッド構文テスト</title>
+</head>
+<body>
+  <script>
+    'use strict';
+    const array1 = ["秋元真夏","鈴木絢音","梅澤美波","山下美月"];
+    const array2 = ["遠藤さくら","田村真佑","林瑠奈","弓木奈於"];
+    const array3 = ["井上和","池田瑛紗"];
+    // スプレッド構文を使って配列を追加する。
+    const array4 = [...array1,...array2,...array3];
+    console.log(array4);
+
+  </script>
+  
+</body>
+</html>
