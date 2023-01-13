@@ -367,7 +367,13 @@
     const obj = {};  
     // 自動演奏用音階表示タイムセット変数
     var auto_tune_work;
+    // きらきら星用音階表示用配列
+    const work_kirakira = [];
+    // きらきら星用音階表示用配列
+    const work_turipu = [];
     
+
+    // ボタンを並べる処理
     for(let k = 0; k < keys.length; k++) {
         const f = hz_array[k];
         buttons.insertAdjacentHTML('beforeend',
@@ -496,6 +502,8 @@
         clearTimeout(display_timer);
     }  
 
+
+
     // 演奏時間取得関数(きらきら星とチューリップの曲の演奏時間を取得する)
     function get_play_time(){
         // きらきら星の演奏時間を取得
@@ -503,15 +511,78 @@
           work_data = kirakira[i];
           kirakira_time += work_data.duration;
         }
-
         work_data = "";
-
         // チューリップの演奏時間を取得
         for(let j=0;j<turipu.length;j++){
           work_data = kirakira[j];
           turipu_time += work_data.duration;
         }
+    }
 
+    // 音階表示時間換算関数
+    function calc(w_time){
+            if(w_time >= 1){
+              w_time = 1000;
+            } else if (w_time == 0.25){
+              w_time = 500;
+            } else {
+              w_time = w_time * 1000;
+            }
+            return w_time;
+    }
+
+    // きらきら星音階表示、音階表示時間配列作成関数
+    function work_kirakira_array() {
+      let work_a;
+      let work_b;
+      for(let i=0;i<kirakira.length;i++){
+        let a = kirakira[i]["note"];
+        let b = kirakira[i]['duration'];
+        if(i == 0){
+          work_a = a;
+          work_b = b;
+        } else {
+          if (work_a == a){
+            work_b += b;
+          } else {
+            work_b = calc(work_b);
+            work_kirakira.push(work_a + ":" + work_b);
+            work_a = a;
+            work_b = b;
+          }
+        }  
+        if(i == kirakira.length-1){
+            work_b = calc(work_b);
+            work_kirakira.push(work_a + ":" + work_b);
+        }
+      }
+    }
+
+    // チューリップ星音階表示、音階表示時間配列作成関数
+    function work_turipu_array() {
+      let work_a;
+      let work_b;
+      for(let i=0;i<turipu.length;i++){
+        let a = turipu[i]["note"];
+        let b = turipu[i]['duration'];
+        if(i == 0){
+          work_a = a;
+          work_b = b;
+        } else {
+          if (work_a == a){
+            work_b += b;
+          } else {
+            work_b = calc(work_b);
+            work_turipu.push(work_a + ":" + work_b);
+            work_a = a;
+            work_b = b;
+          }
+        }  
+        if(i == turipu.length-1){
+            work_b = calc(work_b);
+            work_turipu.push(work_a + ":" + work_b);
+        }
+      }
     }
 
     // 自動演奏中の曲名点滅処理(500ミリ秒毎に10回点滅(10秒)させて表示し続ける)
@@ -546,6 +617,9 @@
         
         // 演奏時間関数を呼び出す
         get_play_time();
+        // 音階表示用配列を作成する
+        work_kirakira_array();
+        work_turipu_array();
         
         //演奏する楽譜のセット処理
         function setPlay(time, note) {
@@ -585,63 +659,27 @@
               
       });
 
-      // 非同期処理で画面に表示する名前と表示時間設定関数
+    // 「きらきら星」非同期処理で画面に表示する名前と表示時間設定関数
     
     async function auto_kirakira_disp() {
-      for(let i = 0;i < kirakira.length;i++){
-        let note = kirakira[i]["note"];
-        let duration = kirakira[i]['duration'];
-        if (i >= 2){
-          if ((kirakira[i-2]["note"] == kirakira[i-1]["note"] ) && (kirakira[i-2]["note"] == kirakira[i-1]["note"] )){
-            note = "";
-            duration = 0;
-          } else {
-            if (duration >= 1){
-              duration = 1000;
-            } else {
-              duration = duration * 1000;
-            }
-          }
-        } else {
-          if (duration >= 1){
-              duration = 1000;
-            } else {
-              duration = duration * 1000;
-          }
-        }
+      for(let i = 0;i < work_kirakira.length;i++){
+        let work_array = work_kirakira[i].split(":");
+        let note = work_array[0];
+        let duration = work_array[1];
         await disp(note,duration);
       }  
     }
-      
-    
-
-    async function auto_turipu_disp() {
-      for(let i = 0;i < turipu.length;i++){
-        let note = turipu[i]["note"];
-        let duration = turipu[i]['duration'];
-        if (i >= 2){
-          if ((turipu[i-2]["note"] == turipu[i-1]["note"] ) && (turipu[i-2]["note"] == turipu[i-1]["note"] )){
-            note = "";
-            duration = 0;
-          } else {
-            if (duration >= 1){
-              duration = 1000;
-            } else {
-              duration = parseInt(duration * 1000);
-            }
-          }
-        } else {
-          if (duration >= 1){
-              duration = 1000;
-          } else if (duration == 0.25){
-              duration = 500;
-          }  else {
-              duration = parseInt(duration * 1000);
-          }
-        }    
+   
+    // 「チューリップ」非同期処理で画面に表示する名前と表示時間設定関数
+   async function auto_turipu_disp() {
+    for(let i = 0;i < work_turipu.length;i++){
+        let work_array = work_turipu[i].split(":");
+        let note = work_array[0];
+        let duration = work_array[1];
         await disp(note,duration);
-      }
-    }  
+    }   
+  }
+     
 
     // 非同期処理で画面に表示する音階表示関数
     disp = (name,time) => {
