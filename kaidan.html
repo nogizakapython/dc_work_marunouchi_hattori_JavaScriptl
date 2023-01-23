@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>階段表示</title>
+  <style>
+    body {
+      width:600px;
+    }
+    .test1 {
+      color:#0F0;
+      font-size:18px;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const num = 50;
+    let ans = "";
+    for(let i=1;i<=num;i++){
+      for(let j=1;j<=i;j++){
+          if (j == i) {
+              ans = ans + j;
+          } else {
+              ans = ans + j + " ";
+          }
+      }
+      document.write(`<p class=test1>${ans}</p>`);
+      ans="";
+  }
+    
+  </script>
+  
+</body>
+</html>
