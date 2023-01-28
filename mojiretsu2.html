@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文字列の結合</title>
+</head>
+<body>
+  <script>
+    const t = '19:28:33';
+    document.write(`<p>${t.split(":")}</p>`);
+    const [hour,minute,second] = t.split(":");
+    document.write(`<p>${hour}</p>`);
+    document.write(`<p>${minute}</p>`);
+    document.write(`<p>${second}</p>`);
+
+  </script>
+</body>
+</html>
