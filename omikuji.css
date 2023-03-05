@@ -1,0 +1,15 @@
+/* omikuji.css */
+
+
+@charset 'utf-8';
+
+main{
+  width:240px;
+  margin:32px auto;
+}
+
+section {
+  border:4px double;
+  text-align: center;
+  color:#FF0000;
+}
