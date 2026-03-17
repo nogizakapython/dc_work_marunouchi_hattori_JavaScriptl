@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;font-family:'Segoe UI',sans-serif;touch-action:none}
+canvas{image-rendering:pixelated;max-width:100vw;max-height:100vh;border:2px solid #333}
+#ui{position:absolute;top:0;left:0;width:100%;pointer-events:none;color:#fff;font-size:14px;padding:8px 12px;display:flex;justify-content:space-between;text-shadow:1px 1px 2px #000}
+#controls{position:absolute;bottom:10px;left:0;width:100%;display:none;pointer-events:none}
+#controls.show{display:flex;justify-content:space-between;padding:0 10px}
+.ctrl-area{pointer-events:auto;display:flex;gap:8px;align-items:flex-end}
+.btn{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none}
+.btn.wide{width:70px;height:70px;font-size:16px;font-weight:bold}
+#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);color:#fff;z-index:10}
+#startScreen h1{font-size:28px;margin-bottom:8px;color:#f0d020}
+#startScreen p{font-size:14px;margin:4px;color:#ccc}
+#startScreen .start-btn{margin-top:20px;padding:12px 32px;font-size:18px;background:#e04040;color:#fff;border:none;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="startScreen">
+<h1>🍄 スーパーピクセルラン 🍄</h1>
+<p>⬅️➡️ 移動　⬆️/スペース ジャンプ　Zキー ダッシュ</p>
+<p>コインを集めてゴールを目指そう！全3ステージ</p>
+<button class="start-btn" id="startBtn">ゲームスタート！</button>
+</div>
+<canvas id="c"></canvas>
+<div id="ui"><span id="info"></span><span id="stageInfo"></span></div>
+<div id="controls"><div class="ctrl-area"><div class="btn" id="bL">◀</div><div class="btn" id="bR">▶</div></div><div class="ctrl-area"><div class="btn" id="bZ">Z</div><div class="btn wide" id="bJ">JUMP</div></div></div>
+<script>
+const C=document.getElementById('c'),X=C.getContext('2d');
+const W=640,H=400,T=32;
+C.width=W;C.height=H;
+let isMobile='ontouchstart'in window;
+if(isMobile)document.getElementById('controls').classList.add('show');
+
+const keys={};
+document.addEventListener('keydown',e=>{keys[e.key]=true;e.preventDefault()});
+document.addEventListener('keyup',e=>{keys[e.key]=false});
+
+// Mobile controls
+const mkeys={left:false,right:false,jump:false,dash:false};
+function mb(id,k){
+  const el=document.getElementById(id);
+  const on=()=>mkeys[k]=true, off=()=>mkeys[k]=false;
+  el.addEventListener('touchstart',e=>{e.preventDefault();on()});
+  el.addEventListener('touchend',e=>{e.preventDefault();off()});
+  el.addEventListener('touchcancel',e=>{e.preventDefault();off()});
+}
+mb('bL','left');mb('bR','right');mb('bJ','jump');mb('bZ','dash');
+
+const K=k=>keys[k]||false;
+const left=()=>K('ArrowLeft')||K('a')||mkeys.left;
+const right=()=>K('ArrowRight')||K('d')||mkeys.right;
+const jump=()=>K('ArrowUp')||K('w')||K(' ')||mkeys.jump;
+const dash=()=>K('z')||K('Z')||mkeys.dash;
+
+// Game state
+let state='title',score=0,lives=3,stage=0,camX=0,player,platforms,coins,enemies,goal,particles,msgTimer=0,msgText='',deathTimer=0,clearTimer=0;
+
+// Colors
+const SKY=['#5c94fc','#2c0540','#fc9838'];
+const GROUND_C=['#c84c0c','#444','#886830'];
+const GRASS_C=['#00a800','#0a6','#58a028'];
+const BRICK_C=['#e09050','#666','#a07038'];
+
+// Levels
+const LEVELS=[
+  // Stage 1 - Green Hills
+  {pw:3200,ground:[{x:0,w:800},{x:900,w:400},{x:1400,w:600},{x:2100,w:1100}],
+   plats:[{x:200,y:280,w:96},{x:400,y:220,w:96},{x:600,y:250,w:128},{x:1000,y:260,w:96},{x:1100,y:200,w:64},{x:1500,y:250,w:128},{x:1700,y:200,w:96},{x:1900,y:160,w:64},{x:2200,y:260,w:128},{x:2400,y:200,w:96},{x:2600,y:240,w:128},{x:2800,y:180,w:96}],
+   coins:[{x:220,y:250},{x:260,y:250},{x:420,y:190},{x:620,y:220},{x:660,y:220},{x:1020,y:230},{x:1120,y:170},{x:1520,y:220},{x:1560,y:220},{x:1720,y:170},{x:1920,y:130},{x:2220,y:230},{x:2260,y:230},{x:2420,y:170},{x:2620,y:210},{x:2660,y:210},{x:2820,y:150}],
+   enemies:[{x:500,y:0,t:'goomba',pl:400,pr:700},{x:1200,y:0,t:'goomba',pl:1000,pr:1350},{x:1600,y:0,t:'koopa',pl:1400,pr:1900},{x:2300,y:0,t:'goomba',pl:2100,pr:2500},{x:2700,y:0,t:'koopa',pl:2500,pr:2900}],
+   goalX:3050},
+  // Stage 2 - Underground
+  {pw:3600,ground:[{x:0,w:600},{x:750,w:300},{x:1200,w:500},{x:1850,w:400},{x:2400,w:1200}],
+   plats:[{x:150,y:270,w:64},{x:300,y:220,w:64},{x:500,y:180,w:64},{x:650,y:250,w:96},{x:800,y:200,w:96},{x:950,y:280,w:64},{x:1100,y:230,w:64},{x:1300,y:200,w:128},{x:1500,y:250,w:96},{x:1650,y:180,w:96},{x:1800,y:280,w:64},{x:1900,y:220,w:128},{x:2100,y:160,w:96},{x:2500,y:260,w:96},{x:2700,y:200,w:128},{x:2900,y:240,w:64},{x:3000,y:180,w:96},{x:3200,y:220,w:128}],
+   coins:[{x:170,y:240},{x:320,y:190},{x:520,y:150},{x:670,y:220},{x:820,y:170},{x:1320,y:170},{x:1360,y:170},{x:1520,y:220},{x:1670,y:150},{x:1920,y:190},{x:1960,y:190},{x:2120,y:130},{x:2520,y:230},{x:2720,y:170},{x:2760,y:170},{x:3020,y:150},{x:3220,y:190},{x:3260,y:190}],
+   enemies:[{x:400,y:0,t:'goomba',pl:200,pr:550},{x:870,y:0,t:'koopa',pl:750,pr:1050},{x:1400,y:0,t:'goomba',pl:1200,pr:1650},{x:1700,y:0,t:'fly',pl:1600,pr:1800},{x:2000,y:0,t:'goomba',pl:1850,pr:2200},{x:2600,y:0,t:'koopa',pl:2400,pr:2800},{x:3100,y:0,t:'fly',pl:3000,pr:3300}],
+   goalX:3450},
+  // Stage 3 - Sunset Castle
+  {pw:4000,ground:[{x:0,w:500},{x:650,w:250},{x:1050,w:350},{x:1550,w:300},{x:2000,w:400},{x:2550,w:250},{x:2950,w:1050}],
+   plats:[{x:100,y:260,w:64},{x:250,y:200,w:96},{x:450,y:250,w:64},{x:550,y:180,w:96},{x:700,y:240,w:96},{x:900,y:200,w:64},{x:1000,y:280,w:64},{x:1100,y:220,w:96},{x:1300,y:170,w:64},{x:1450,y:250,w:96},{x:1600,y:200,w:128},{x:1800,y:160,w:64},{x:1950,y:270,w:64},{x:2050,y:210,w:96},{x:2200,y:160,w:96},{x:2350,y:250,w:64},{x:2500,y:190,w:96},{x:2700,y:280,w:64},{x:2800,y:220,w:96},{x:3000,y:250,w:128},{x:3200,y:190,w:96},{x:3400,y:240,w:64},{x:3500,y:170,w:96},{x:3700,y:220,w:128}],
+   coins:[{x:120,y:230},{x:270,y:170},{x:310,y:170},{x:570,y:150},{x:720,y:210},{x:1120,y:190},{x:1320,y:140},{x:1620,y:170},{x:1660,y:170},{x:1820,y:130},{x:2070,y:180},{x:2220,y:130},{x:2260,y:130},{x:2520,y:160},{x:2820,y:190},{x:3020,y:220},{x:3060,y:220},{x:3220,y:160},{x:3520,y:140},{x:3560,y:140},{x:3720,y:190},{x:3760,y:190}],
+   enemies:[{x:350,y:0,t:'goomba',pl:100,pr:480},{x:750,y:0,t:'koopa',pl:650,pr:900},{x:1200,y:0,t:'fly',pl:1050,pr:1350},{x:1500,y:0,t:'goomba',pl:1400,pr:1700},{x:1900,y:0,t:'koopa',pl:1800,pr:2100},{x:2150,y:0,t:'fly',pl:2000,pr:2350},{x:2600,y:0,t:'goomba',pl:2550,pr:2800},{x:3100,y:0,t:'koopa',pl:2950,pr:3300},{x:3350,y:0,t:'goomba',pl:3200,pr:3500},{x:3600,y:0,t:'fly',pl:3500,pr:3800}],
+   goalX:3850}
+];
+
+function initLevel(){
+  const L=LEVELS[stage];
+  player={x:50,y:200,vx:0,vy:0,w:24,h:30,onGround:false,dir:1,frame:0,ft:0,inv:0,dead:false};
+  platforms=[];coins=[];enemies=[];particles=[];msgTimer=0;deathTimer=0;clearTimer=0;camX=0;
+  L.ground.forEach(g=>{platforms.push({x:g.x,y:H-48,w:g.w,h:48,type:'ground'})});
+  L.plats.forEach(p=>{platforms.push({x:p.x,y:p.y,w:p.w,h:16,type:'brick'})});
+  L.coins.forEach(c=>{coins.push({x:c.x,y:c.y,alive:true,frame:0})});
+  L.enemies.forEach(e=>{
+    let ey=0;
+    if(e.t==='fly'){ey=200}
+    else{for(let p of platforms){if(e.x>=p.x&&e.x<=p.x+p.w){ey=p.y-24;break}}}
+    enemies.push({x:e.x,y:ey,vx:-1,w:24,h:24,type:e.t,alive:true,pl:e.pl,pr:e.pr,frame:0,ft:0,baseY:ey});
+  });
+  goal={x:L.goalX,y:H-48-64,w:32,h:64};
+}
+
+function spawnParticles(x,y,col,n){
+  for(let i=0;i<n;i++){
+    particles.push({x,y,vx:(Math.random()-0.5)*4,vy:-Math.random()*4-1,life:30+Math.random()*20,col,sz:2+Math.random()*3});
+  }
+}
+
+function showMsg(t){msgText=t;msgTimer=90;}
+
+function update(){
+  if(state!=='play')return;
+  const p=player;
+  if(p.dead){deathTimer++;if(deathTimer>60){lives--;if(lives<=0){state='gameover'}else{initLevel();state='play'}}return}
+  if(clearTimer>0){clearTimer++;if(clearTimer>90){stage++;if(stage>=3){state='win'}else{initLevel();showMsg('STAGE '+(stage+1))}}return}
+
+  // Input
+  let spd=dash()?4.5:3;
+  if(left()){p.vx=-spd;p.dir=-1}
+  else if(right()){p.vx=spd;p.dir=1}
+  else{p.vx*=0.7;if(Math.abs(p.vx)<0.3)p.vx=0}
+  if(jump()&&p.onGround){p.vy=-10;p.onGround=false}
+  if(!jump()&&p.vy<-3)p.vy=-3;
+
+  // Physics
+  p.vy+=0.55;if(p.vy>12)p.vy=12;
+  p.x+=p.vx;p.y+=p.vy;p.onGround=false;
+  if(p.inv>0)p.inv--;
+
+  // Anim
+  p.ft++;if(p.ft>6){p.ft=0;p.frame=(p.frame+1)%4}
+
+  // Platform collision
+  for(let pl of platforms){
+    if(p.x+p.w>pl.x&&p.x<pl.x+pl.w&&p.y+p.h>pl.y&&p.y+p.h<pl.y+pl.h+10&&p.vy>=0){
+      p.y=pl.y-p.h;p.vy=0;p.onGround=true;
+    }
+    // Side collision
+    if(p.y+p.h>pl.y+4&&p.y<pl.y+pl.h-4){
+      if(p.x+p.w>pl.x&&p.x+p.w<pl.x+8&&p.vx>0){p.x=pl.x-p.w;p.vx=0}
+      if(p.x<pl.x+pl.w&&p.x>pl.x+pl.w-8&&p.vx<0){p.x=pl.x+pl.w;p.vx=0}
+    }
+    // Head bump
+    if(p.x+p.w>pl.x+4&&p.x<pl.x+pl.w-4&&p.y<pl.y+pl.h&&p.y>pl.y&&p.vy<0){
+      p.y=pl.y+pl.h;p.vy=1;
+    }
+  }
+
+  // Fall
+  if(p.y>H+50){p.dead=true;deathTimer=0}
+
+  // Clamp
+  if(p.x<0)p.x=0;
+  if(p.x>LEVELS[stage].pw-p.w)p.x=LEVELS[stage].pw-p.w;
+
+  // Camera
+  let tx=p.x-W/3;
+  camX+=(tx-camX)*0.1;
+  if(camX<0)camX=0;
+  if(camX>LEVELS[stage].pw-W)camX=LEVELS[stage].pw-W;
+
+  // Coins
+  coins.forEach(c=>{
+    if(!c.alive)return;
+    c.frame=(c.frame+0.1)%4;
+    if(Math.abs(p.x+p.w/2-c.x)<20&&Math.abs(p.y+p.h/2-c.y)<20){
+      c.alive=false;score+=100;
+      spawnParticles(c.x,c.y,'#ffd700',8);
+    }
+  });
+
+  // Enemies
+  enemies.forEach(e=>{
+    if(!e.alive)return;
+    e.ft++;if(e.ft>8){e.ft=0;e.frame=(e.frame+1)%2}
+    if(e.type==='fly'){
+      e.x+=e.vx*1.5;
+      e.y=e.baseY+Math.sin(Date.now()/300)*30;
+    }else{
+      e.x+=e.vx*(e.type==='koopa'?1.5:1);
+      // Ground check for walking enemies
+      let onPl=false;
+      for(let pl of platforms){
+        if(e.x+e.w>pl.x&&e.x<pl.x+pl.w&&Math.abs(e.y+e.h-pl.y)<8){onPl=true;e.y=pl.y-e.h}
+      }
+      if(!onPl)e.y+=4;
+    }
+    if(e.x<=e.pl||e.x+e.w>=e.pr)e.vx*=-1;
+
+    // Player collision
+    if(p.inv<=0&&!p.dead){
+      let dx=Math.abs(p.x+p.w/2-(e.x+e.w/2));
+      let dy=Math.abs(p.y+p.h/2-(e.y+e.h/2));
+      if(dx<(p.w+e.w)/2-4&&dy<(p.h+e.h)/2-4){
+        if(p.vy>0&&p.y+p.h<e.y+e.h/2+8){
+          e.alive=false;p.vy=-8;score+=200;
+          spawnParticles(e.x+e.w/2,e.y+e.h/2,'#ff4444',10);
+        }else{
+          p.dead=true;deathTimer=0;
+        }
+      }
+    }
+  });
+
+  // Goal
+  if(Math.abs(p.x+p.w/2-goal.x)<30&&p.y+p.h>goal.y){
+    if(clearTimer===0){clearTimer=1;score+=1000;showMsg('STAGE CLEAR!');}
+  }
+
+  // Particles
+  particles.forEach(pt=>{pt.x+=pt.vx;pt.y+=pt.vy;pt.vy+=0.15;pt.life--});
+  particles=particles.filter(pt=>pt.life>0);
+  if(msgTimer>0)msgTimer--;
+}
+
+function drawRect(x,y,w,h,c){X.fillStyle=c;X.fillRect(Math.round(x-camX),Math.round(y),w,h)}
+function drawRectAbs(x,y,w,h,c){X.fillStyle=c;X.fillRect(x,y,w,h)}
+
+function drawBg(){
+  // Sky
+  let g=X.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,SKY[stage]);g.addColorStop(1,'#000');
+  X.fillStyle=g;X.fillRect(0,0,W,H);
+  // Clouds/stars
+  if(stage===1){
+    X.fillStyle='rgba(255,255,255,0.15)';
+    for(let i=0;i<20;i++){let sx=(i*173%W+camX*0.1)%W;X.fillRect(sx,20+i*17%150,2,2)}
+  }else{
+    X.fillStyle='rgba(255,255,255,0.3)';
+    for(let i=0;i<6;i++){
+      let cx=((i*200+50)-camX*0.2)%800;if(cx<-60)cx+=800;
+      X.beginPath();X.arc(cx,60+i*20%80,20,0,Math.PI*2);X.fill();
+      X.beginPath();X.arc(cx+18,55+i*20%80,16,0,Math.PI*2);X.fill();
+      X.beginPath();X.arc(cx-15,58+i*20%80,14,0,Math.PI*2);X.fill();
+    }
+  }
+  // Mountains
+  X.fillStyle=stage===1?'#1a0a30':'rgba(0,100,0,0.15)';
+  for(let i=0;i<8;i++){
+    let mx=(i*450)-camX*0.15;
+    X.beginPath();X.moveTo(mx,H);X.lineTo(mx+120,H-120-i%3*40);X.lineTo(mx+240,H);X.fill();
+  }
+}
+
+function drawPlayer(){
+  const p=player;
+  if(p.dead){
+    // Death animation
+    let dy=Math.min(deathTimer*2,60);
+    X.fillStyle='#e04040';
+    X.fillRect(Math.round(p.x-camX+4),Math.round(p.y-dy+4),16,22);
+    return;
+  }
+  if(p.inv>0&&p.inv%4<2)return;
+  let px=Math.round(p.x-camX),py=Math.round(p.y);
+  let d=p.dir;
+  // Body
+  X.fillStyle='#e04040';
+  X.fillRect(px+4,py+10,16,14);
+  // Head
+  X.fillStyle='#ffb880';
+  X.fillRect(px+6,py+2,12,10);
+  // Hat
+  X.fillStyle='#e04040';
+  X.fillRect(px+(d>0?4:6),py,16,6);
+  // Eye
+  X.fillStyle='#000';
+  X.fillRect(px+(d>0?14:8),py+5,3,3);
+  // Legs
+  X.fillStyle='#4040c0';
+  let lf=p.onGround?(Math.abs(p.vx)>0.5?Math.sin(p.frame*1.5)*4:0):3;
+  X.fillRect(px+5,py+24,6,6+lf);
+  X.fillRect(px+13,py+24,6,6-lf);
+  // Shoes
+  X.fillStyle='#804020';
+  X.fillRect(px+4,py+28+(lf>0?lf:0),7,3);
+  X.fillRect(px+13,py+28-(lf>0?lf:0),7,3);
+}
+
+function drawPlatforms(){
+  platforms.forEach(pl=>{
+    if(pl.x+pl.w<camX-20||pl.x>camX+W+20)return;
+    if(pl.type==='ground'){
+      drawRect(pl.x,pl.y,pl.w,4,GRASS_C[stage]);
+      drawRect(pl.x,pl.y+4,pl.w,pl.h-4,GROUND_C[stage]);
+      // Texture
+      X.fillStyle='rgba(0,0,0,0.1)';
+      for(let i=0;i<pl.w;i+=16){drawRect(pl.x+i,pl.y+12,8,2,'rgba(0,0,0,0.1)')}
+    }else{
+      drawRect(pl.x,pl.y,pl.w,pl.h,BRICK_C[stage]);
+      drawRect(pl.x,pl.y,pl.w,2,'rgba(255,255,255,0.2)');
+      X.fillStyle='rgba(0,0,0,0.15)';
+      for(let i=0;i<pl.w;i+=T){
+        X.fillRect(Math.round(pl.x+i-camX),pl.y,1,pl.h);
+      }
+    }
+  });
+}
+
+function drawCoins(){
+  coins.forEach(c=>{
+    if(!c.alive)return;
+    if(c.x<camX-20||c.x>camX+W+20)return;
+    let w=Math.abs(Math.cos(c.frame*Math.PI/2))*10+2;
+    X.fillStyle='#ffd700';
+    X.fillRect(Math.round(c.x-w/2-camX),Math.round(c.y-6),w,12);
+    X.fillStyle='#fff8a0';
+    X.fillRect(Math.round(c.x-w/4-camX),Math.round(c.y-4),w/2,4);
+  });
+}
+
+function drawEnemies(){
+  enemies.forEach(e=>{
+    if(!e.alive)return;
+    if(e.x<camX-40||e.x>camX+W+40)return;
+    let ex=Math.round(e.x-camX),ey=Math.round(e.y);
+    if(e.type==='goomba'){
+      X.fillStyle='#a04000';
+      X.fillRect(ex+2,ey+4,20,16);
+      X.fillStyle='#c06020';
+      X.fillRect(ex+4,ey,16,10);
+      X.fillStyle='#fff';
+      X.fillRect(ex+6,ey+4,4,4);
+      X.fillRect(ex+14,ey+4,4,4);
+      X.fillStyle='#000';
+      X.fillRect(ex+7,ey+5,2,2);
+      X.fillRect(ex+15,ey+5,2,2);
+      // Feet
+      let fw=e.frame*2;
+      X.fillStyle='#603000';
+      X.fillRect(ex+2-fw,ey+18,8,6);
+      X.fillRect(ex+14+fw,ey+18,8,6);
+    }else if(e.type==='koopa'){
+      // Shell
+      X.fillStyle='#00a800';
+      X.fillRect(ex+4,ey+8,16,14);
+      X.fillStyle='#00c800';
+      X.fillRect(ex+6,ey+10,12,10);
+      // Head
+      X.fillStyle='#e8c860';
+      X.fillRect(ex+(e.vx<0?0:16),ey+2,8,12);
+      X.fillStyle='#000';
+      X.fillRect(ex+(e.vx<0?2:20),ey+5,3,3);
+      // Feet
+      X.fillStyle='#e8c860';
+      X.fillRect(ex+4,ey+20,6,4);
+      X.fillRect(ex+14,ey+20,6,4);
+    }else if(e.type==='fly'){
+      // Body
+      X.fillStyle='#6060e0';
+      X.fillRect(ex+4,ey+6,16,14);
+      // Wings
+      X.fillStyle='rgba(200,200,255,0.7)';
+      let wy=Math.sin(Date.now()/100)*3;
+      X.fillRect(ex-4,ey+wy,10,8);
+      X.fillRect(ex+18,ey+wy,10,8);
+      // Eyes
+      X.fillStyle='#fff';
+      X.fillRect(ex+6,ey+8,5,5);
+      X.fillRect(ex+13,ey+8,5,5);
+      X.fillStyle='#000';
+      X.fillRect(ex+8,ey+10,2,2);
+      X.fillRect(ex+15,ey+10,2,2);
+    }
+  });
+}
+
+function drawGoal(){
+  let gx=Math.round(goal.x-camX);
+  // Pole
+  X.fillStyle='#aaa';
+  X.fillRect(gx+14,goal.y-20,4,84);
+  // Flag
+  let fy=goal.y-15+Math.sin(Date.now()/300)*3;
+  X.fillStyle='#ffd700';
+  X.beginPath();
+  X.moveTo(gx+18,fy);X.lineTo(gx+40,fy+10);X.lineTo(gx+18,fy+20);
+  X.fill();
+  // Star on flag
+  X.fillStyle='#fff';
+  X.fillRect(gx+24,fy+8,4,4);
+  // Base
+  X.fillStyle='#888';
+  X.fillRect(gx+8,goal.y+goal.h-8,16,8);
+}
+
+function drawParticles(){
+  particles.forEach(pt=>{
+    X.fillStyle=pt.col;
+    X.globalAlpha=pt.life/50;
+    X.fillRect(Math.round(pt.x-camX),Math.round(pt.y),pt.sz,pt.sz);
+  });
+  X.globalAlpha=1;
+}
+
+function drawUI(){
+  const info=document.getElementById('info');
+  const si=document.getElementById('stageInfo');
+  info.textContent=`❤️${lives}  🪙${score}`;
+  si.textContent=`STAGE ${stage+1}`;
+  if(msgTimer>0){
+    X.fillStyle='rgba(0,0,0,0.6)';
+    X.fillRect(W/2-120,H/2-30,240,50);
+    X.fillStyle='#ffd700';X.font='bold 22px monospace';X.textAlign='center';
+    X.fillText(msgText,W/2,H/2+2);
+    X.textAlign='left';
+  }
+}
+
+function drawGameOver(){
+  X.fillStyle='rgba(0,0,0,0.8)';X.fillRect(0,0,W,H);
+  X.fillStyle='#e04040';X.font='bold 36px monospace';X.textAlign='center';
+  X.fillText('GAME OVER',W/2,H/2-20);
+  X.fillStyle='#fff';X.font='18px monospace';
+  X.fillText(`SCORE: ${score}`,W/2,H/2+20);
+  X.fillText('クリックでリトライ',W/2,H/2+55);
+  X.textAlign='left';
+}
+
+function drawWin(){
+  X.fillStyle='rgba(0,0,0,0.8)';X.fillRect(0,0,W,H);
+  X.fillStyle='#ffd700';X.font='bold 32px monospace';X.textAlign='center';
+  X.fillText('🎉 CONGRATULATIONS! 🎉',W/2,H/2-30);
+  X.fillStyle='#fff';X.font='20px monospace';
+  X.fillText(`FINAL SCORE: ${score}`,W/2,H/2+15);
+  X.fillText('全ステージクリア！',W/2,H/2+45);
+  X.fillText('クリックでリスタート',W/2,H/2+80);
+  X.textAlign='left';
+}
+
+function loop(){
+  update();
+  drawBg();
+  if(state==='play'){
+    drawPlatforms();drawCoins();drawEnemies();drawGoal();drawPlayer();drawParticles();drawUI();
+  }else if(state==='gameover'){
+    drawPlatforms();drawCoins();drawEnemies();drawGoal();drawPlayer();drawUI();drawGameOver();
+  }else if(state==='win'){
+    drawWin();
+  }
+  requestAnimationFrame(loop);
+}
+
+function startGame(){
+  document.getElementById('startScreen').style.display='none';
+  state='play';score=0;lives=3;stage=0;
+  initLevel();showMsg('STAGE 1');
+  loop();
+}
+
+document.getElementById('startBtn').addEventListener('click',startGame);
+C.addEventListener('click',()=>{
+  if(state==='gameover'||state==='win'){
+    state='play';score=0;lives=3;stage=0;initLevel();showMsg('STAGE 1');
+  }
+});
+</script>
+</body>
+</html>
